@@ -4,3 +4,4 @@ C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\bin\Debu
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\tmp\Obj\Fusee.Tutorial.Desktop\Debug\AssetsPicking.Desktop.csprojResolveAssemblyReference.cache
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\tmp\Obj\Fusee.Tutorial.Desktop\Debug\Fusee.Tutorial.Desktop.exe
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\tmp\Obj\Fusee.Tutorial.Desktop\Debug\Fusee.Tutorial.Desktop.pdb
+C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\bin\Debug\Desktop\Assets\Fahrzeug3.fus

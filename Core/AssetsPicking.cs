@@ -20,8 +20,16 @@ namespace Fusee.Tutorial.Core
         private SceneRenderer _sceneRenderer;
         private float _camAngle = 0;
         private TransformComponent _baseTransform;
-        private TransformComponent _getTransform;
-        private TransformComponent _getBewegung;
+        private TransformComponent _unterarmTransform;
+        private TransformComponent _verbagTransform;
+        private TransformComponent _oberesGewTransform;
+        private TransformComponent _RadR01Transform;
+        private TransformComponent _RadR02Transform;
+        private TransformComponent _RadR03Transform;
+        private TransformComponent _RadR04Transform;
+        private TransformComponent _RadR05Transform;
+        private TransformComponent _RadR06Transform;
+        private TransformComponent _oberarmTransform;
         private ScenePicker _scenePicker;
         private PickResult _currentPick;
         private float3 _oldColor;
@@ -69,9 +77,8 @@ namespace Fusee.Tutorial.Core
             // Set the clear color for the backbuffer to white (100% intentsity in all color channels R, G, B, A).
             RC.ClearColor = new float4(0.8f, 0.9f, 0.7f, 1);
 
-            _scene = AssetStorage.Get<SceneContainer>("Fahrzeug2.fus");
+            _scene = AssetStorage.Get<SceneContainer>("Fahrzeug3.fus");
 
-            _getBewegung = _scene.Children.FindNodes(node => node.Name == "Oberes_Gewinde_drehbar")?.FirstOrDefault()?.GetTransform();
 
             //Scene Picker
             _scenePicker = new ScenePicker(_scene);
@@ -84,53 +91,128 @@ namespace Fusee.Tutorial.Core
         public override void RenderAFrame()
         {
             //_baseTransform.Rotation = new float3(0, M.MinAngle(TimeSinceStart), 0);
+            _oberesGewTransform = _scene.Children.FindNodes(node => node.Name == "pfeiler_gewinde_arm_nicht_drehbar")?.FirstOrDefault()?.GetTransform();
+            _RadR01Transform = _scene.Children.FindNodes(node => node.Name == "Rad_R_01")?.FirstOrDefault()?.GetTransform();
+            _RadR02Transform = _scene.Children.FindNodes(node => node.Name == "Rad_L_01")?.FirstOrDefault()?.GetTransform();
+            _RadR03Transform = _scene.Children.FindNodes(node => node.Name == "Rad_02_R")?.FirstOrDefault()?.GetTransform();
+            _RadR04Transform = _scene.Children.FindNodes(node => node.Name == "Rad_02_L")?.FirstOrDefault()?.GetTransform();
+            _RadR05Transform = _scene.Children.FindNodes(node => node.Name == "Rad_03_L")?.FirstOrDefault()?.GetTransform();
+            _RadR06Transform = _scene.Children.FindNodes(node => node.Name == "Rad_03_R")?.FirstOrDefault()?.GetTransform();
+            _unterarmTransform = _scene.Children.FindNodes(node => node.Name == "unterer_arm")?.FirstOrDefault()?.GetTransform(); //Oberer_arm
+            _oberarmTransform = _scene.Children.FindNodes(node => node.Name == "Oberer_arm")?.FirstOrDefault()?.GetTransform();
+           _verbagTransform = _scene.Children.FindNodes(node => node.Name == "verbindung_arm_greifer")?.FirstOrDefault()?.GetTransform();
+
 
             // Clear the backbuffer
             RC.Clear(ClearFlags.Color | ClearFlags.Depth);
 
-            // Setup the camera 
-            RC.View = float4x4.CreateTranslation(0, 0, 10) * float4x4.CreateRotationX(_camAngle);
 
             if (Mouse.LeftButton == true)
             {
-                _camAngle += Mouse.Velocity.y * 0.00001f * DeltaTime / 20 * 1500;
+                _camAngle += Mouse.Velocity.x * 0.00001f * DeltaTime / 20 * 10000;
             }
+            // Setup the camera 
+            RC.View = float4x4.CreateTranslation(0, 0, 10) * float4x4.CreateRotationY(_camAngle);
+
 
             //ToDO If Bedingung eingefügt
-            if(Mouse.LeftButton)
+
+            if (Mouse.LeftButton)
             {
                 float2 pickPosClip = Mouse.Position * new float2(2.0f / Width, -2.0f / Height) + new float2(-1, 1);
                 _scenePicker.View = RC.View;
                 _scenePicker.Projection = RC.Projection;
                 List<PickResult> pickResults = _scenePicker.Pick(pickPosClip).ToList();
-                PickResult newPick = null;
-                if(pickResults.Count > 0)
+                if (pickResults.Count > 0)
                 {
-                    pickResults.Sort((a, b) => Sign(a.ClipPos.z - b.ClipPos.z));
-                    newPick = pickResults[0];
-                }
-                if (newPick?.Node != _currentPick?.Node)
-                {
-                    if (_currentPick != null)
-                    {
-                        _currentPick.Node.GetMaterial().Diffuse.Color = _oldColor;
-                    }
-                    if(newPick != null)
-                    {
-                        var mat = newPick.Node.GetMaterial();
-                        _oldColor = mat.Diffuse.Color;
-                        mat.Diffuse.Color = new float3(1, 0.4f, 0.4f);
-                        /*_getTransform = _scene.Children.FindNodes(node => node.Name == "")?.FirstOrDefault()?.GetTransform();*/
-                        /*var tran = newPick.Node.GetTransform();
-                        float pos = tran.Rotation.x;
-                        pos += 0.005f * Keyboard.UpDownAxis;
-                        tran.Rotation = new float3(pos, 0, 0);*/
+                    Diagnostics.Log(pickResults[0].Node.Name);
 
+                    PickResult newPick = null;
+                    if (pickResults.Count > 0)
+                    {
+                        pickResults.Sort((a, b) => Sign(a.ClipPos.z - b.ClipPos.z));
+                        newPick = pickResults[0];
                     }
-                    _currentPick = newPick;
+                    if (newPick?.Node != _currentPick?.Node)
+                    {
+                        if (_currentPick != null)
+                        {
+                            _currentPick.Node.GetMaterial().Diffuse.Color = _oldColor;
+                        }
+                        if (newPick != null)
+                        {
+                            var mat = newPick.Node.GetMaterial();
+                            _oldColor = mat.Diffuse.Color;
+                            mat.Diffuse.Color = new float3(1, 0.4f, 0.4f);
+
+                        }
+                        _currentPick = newPick;
+                    }
                 }
             }
 
+
+            if (_currentPick != null)
+            {
+                switch (_currentPick.Node.Name)
+                {
+                    case "Rad_R_01":
+                        float RadR01 = _RadR01Transform.Rotation.x;
+                        RadR01 += Keyboard.ADAxis * 2.0f * (DeltaTime);
+                        _RadR01Transform.Rotation = new float3(RadR01, 0, 0);
+                        break;
+                    case "Rad_L_01":
+                        float RadR02 = _RadR02Transform.Rotation.x;
+                        RadR02 += Keyboard.ADAxis * 2.0f * (DeltaTime);
+                        _RadR02Transform.Rotation = new float3(RadR02, 0, 0);
+                        break;
+                    case "Rad_02_R":
+                        float RadR03 = _RadR03Transform.Rotation.x;
+                        RadR03 += Keyboard.ADAxis * 2.0f * (DeltaTime);
+                        _RadR03Transform.Rotation = new float3(RadR03, 0, 0);
+                        break;
+                    case "Rad_02_L":
+                        float RadR04 = _RadR04Transform.Rotation.x;
+                        RadR04 += Keyboard.ADAxis * 2.0f * (DeltaTime);
+                        _RadR04Transform.Rotation = new float3(RadR04, 0, 0);
+                        break;
+                    case "Rad_03_L":
+                        float RadR05 = _RadR05Transform.Rotation.x;
+                        RadR05 += Keyboard.ADAxis * 2.0f * (DeltaTime);
+                        _RadR05Transform.Rotation = new float3(RadR05, 0, 0);
+                        break;
+                    case "Rad_03_R":
+                        float RadR06 = _RadR06Transform.Rotation.x;
+                        RadR06 += Keyboard.ADAxis * 2.0f * (DeltaTime);
+                        _RadR06Transform.Rotation = new float3(RadR06, 0, 0);
+                        break;
+                    
+
+
+                    case "pfeiler_gewinde_arm_nicht_drehbar":
+                        float ogd = _oberesGewTransform.Rotation.y;
+                        ogd += Keyboard.LeftRightAxis * 0.005f;
+                        _oberesGewTransform.Rotation =new float3(0, ogd, 0);
+                        break;
+                    case "unterer_arm":
+                        float unter = _unterarmTransform.Rotation.x;
+                        unter += Keyboard.UpDownAxis * 0.005f;
+                        _unterarmTransform.Rotation = new float3(unter,0,0);
+                        break;
+                    /*case "Oberer_arm":
+                        float obArmx = _oberarmTransform.Translation.z;
+                        obArmx += Keyboard.UpDownAxis * 0.1f;
+                        /*float obArmy = _oberarmTransform.Translation.z;
+                        obArmy += Keyboard.UpDownAxis * 0.1f;*/
+                        /*_oberarmTransform.Translation = new float3(0, 0, obArmx);
+                        break;*/
+                    case "verbindung_arm_greifer":
+                        float ver = _verbagTransform.Translation.y;
+                        ver += Keyboard.UpDownAxis * 0.005f;
+                        _verbagTransform.Translation = new float3(0, ver, 0);
+                        break; 
+                }
+            }
             // Render the scene on the current render context
             _sceneRenderer.Render(RC);
 

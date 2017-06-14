@@ -1,6 +1,6 @@
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\bin\Debug\Libraries\Assets\Fahrzeug2.fus
+C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\bin\Debug\Libraries\Assets\Fahrzeug3.fus
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\bin\Debug\Libraries\Fusee.Tutorial.Core.dll
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\bin\Debug\Libraries\Fusee.Tutorial.Core.pdb
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\tmp\Obj\Fusee.Tutorial.Core\Debug\Fusee.Tutorial.Core.dll
 C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\tmp\Obj\Fusee.Tutorial.Core\Debug\Fusee.Tutorial.Core.pdb
-C:\Users\Skippy\Documents\HFU\ComputergrafikMIB-master\11_AssetsPicking\tmp\Obj\Fusee.Tutorial.Core\Debug\AssetsPicking.Core.csprojResolveAssemblyReference.cache
