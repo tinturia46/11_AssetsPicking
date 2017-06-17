@@ -29,7 +29,7 @@ namespace Fusee.Tutorial.Core
         private TransformComponent _RadR04Transform;
         private TransformComponent _RadR05Transform;
         private TransformComponent _RadR06Transform;
-        private TransformComponent _oberarmTransform;
+        //private TransformComponent _oberarmTransform;
         private ScenePicker _scenePicker;
         private PickResult _currentPick;
         private float3 _oldColor;
@@ -99,7 +99,7 @@ namespace Fusee.Tutorial.Core
             _RadR05Transform = _scene.Children.FindNodes(node => node.Name == "Rad_03_L")?.FirstOrDefault()?.GetTransform();
             _RadR06Transform = _scene.Children.FindNodes(node => node.Name == "Rad_03_R")?.FirstOrDefault()?.GetTransform();
             _unterarmTransform = _scene.Children.FindNodes(node => node.Name == "unterer_arm")?.FirstOrDefault()?.GetTransform(); //Oberer_arm
-            _oberarmTransform = _scene.Children.FindNodes(node => node.Name == "Oberer_arm")?.FirstOrDefault()?.GetTransform();
+            //_oberarmTransform = _scene.Children.FindNodes(node => node.Name == "Oberer_arm")?.FirstOrDefault()?.GetTransform();
            _verbagTransform = _scene.Children.FindNodes(node => node.Name == "verbindung_arm_greifer")?.FirstOrDefault()?.GetTransform();
 
 
@@ -107,12 +107,12 @@ namespace Fusee.Tutorial.Core
             RC.Clear(ClearFlags.Color | ClearFlags.Depth);
 
 
-            if (Mouse.LeftButton == true)
+            if (Mouse.RightButton == true)
             {
                 _camAngle += Mouse.Velocity.x * 0.00001f * DeltaTime / 20 * 10000;
             }
             // Setup the camera 
-            RC.View = float4x4.CreateTranslation(0, 0, 10) * float4x4.CreateRotationY(_camAngle);
+            RC.View = float4x4.CreateTranslation(0, -2, 10) * float4x4.CreateRotationY(_camAngle);
 
 
             //ToDO If Bedingung eingefügt
@@ -196,8 +196,24 @@ namespace Fusee.Tutorial.Core
                         break;
                     case "unterer_arm":
                         float unter = _unterarmTransform.Rotation.x;
-                        unter += Keyboard.UpDownAxis * 0.005f;
-                        _unterarmTransform.Rotation = new float3(unter,0,0);
+                        if (Keyboard.GetKey(KeyCodes.Up) == true)
+                        {
+                            if (unter <= 0.35f)
+                            {
+                               
+                                unter += DeltaTime * 0.1f;
+                                _unterarmTransform.Rotation = new float3(unter, 0, 0);
+                            }
+                        }
+                        if (Keyboard.GetKey(KeyCodes.Down) == true)
+                        {
+                            if (unter >= 0.0f)
+                            {
+
+                                unter -= DeltaTime * 0.1f;
+                                _unterarmTransform.Rotation = new float3(unter, 0, 0);
+                            }
+                        }
                         break;
                     /*case "Oberer_arm":
                         float obArmx = _oberarmTransform.Translation.z;
@@ -208,8 +224,23 @@ namespace Fusee.Tutorial.Core
                         break;*/
                     case "verbindung_arm_greifer":
                         float ver = _verbagTransform.Translation.y;
-                        ver += Keyboard.UpDownAxis * 0.005f;
-                        _verbagTransform.Translation = new float3(0, ver, 0);
+                        if (Keyboard.GetKey(KeyCodes.Up) == true)
+                        {
+                            if (ver <= -0.5f)
+                            {
+                                ver += DeltaTime * 2f;
+                                _verbagTransform.Translation = new float3(0, ver, 0);
+                            }
+                        }
+                        if (Keyboard.GetKey(KeyCodes.Down) == true)
+                        {
+                            if (ver >= -10.0f)
+                            {
+
+                                ver -= DeltaTime * 2f;
+                                _verbagTransform.Translation = new float3(0, ver, 0);
+                            }
+                        }
                         break; 
                 }
             }
